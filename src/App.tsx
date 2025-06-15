@@ -17,7 +17,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.VITE_BASE_URL}>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/session/:sessionId" element={<Session />} />

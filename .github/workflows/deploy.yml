@@ -38,7 +38,7 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
-          NODE_ENV: production
+          VITE_BASE_URL: /scrum-pointing-poker/
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
