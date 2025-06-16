@@ -6,6 +6,7 @@ import NamePromptDialog from '@/components/NamePromptDialog';
 import { supabase } from '@/integrations/supabase/client';
 import Spinner from '@/components/Spinner';
 import { toast } from 'sonner';
+import { BackgroundLines } from '@/components/ui/background-lines';
 
 const Index = () => {
   const [rejoinSessionId, setRejoinSessionId] = useState<string | null>(null);
@@ -57,43 +58,46 @@ const Index = () => {
       localStorage.setItem('userName', name);
 
       navigate(`/session/${sessionId}`);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       console.error('Error joining session:', error);
-      toast.error(`Failed to join session: ${error.message}`);
+      toast.error(`Failed to join session: ${errorMessage}`);
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center p-8">
-        <h1 className="text-5xl font-bold mb-4">Scrum Poker</h1>
-        <p className="text-xl text-muted-foreground mb-8">
-          Real-time pointing for agile teams.
-        </p>
-        {loading ? (
-          <Spinner />
-        ) : (
-          <div className="space-x-4">
-            <Button size="lg" onClick={() => handleOpenDialog('start')}>
-              Start New Session
-            </Button>
-            {rejoinSessionId && (
-              <Button size="lg" variant="outline" onClick={() => handleOpenDialog('rejoin')}>
-                Rejoin Last Session
+    <BackgroundLines>
+      <div className="min-h-screen flex items-center justify-center bg-background">      
+        <div className="text-center p-8 z-20">
+          <h1 className="text-5xl font-bold mb-4">Scrum Poker</h1>
+          <p className="text-xl text-muted-foreground mb-8">
+            Real-time pointing for agile teams.
+          </p>
+          {loading ? (
+            <Spinner />
+          ) : (
+            <div className="space-x-4">
+              <Button size="lg" onClick={() => handleOpenDialog('start')}>
+                Start New Session
               </Button>
-            )}
-          </div>
-        )}
+              {rejoinSessionId && (
+                <Button size="lg" variant="outline" onClick={() => handleOpenDialog('rejoin')}>
+                  Rejoin Last Session
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
+        <NamePromptDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          onNameSubmit={handleNameSubmit}
+          title={dialogAction === 'start' ? 'Start a New Session' : 'Rejoin Session'}
+          description="Please enter your name to join the session."
+        />
       </div>
-      <NamePromptDialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        onNameSubmit={handleNameSubmit}
-        title={dialogAction === 'start' ? 'Start a New Session' : 'Rejoin Session'}
-        description="Please enter your name to join the session."
-      />
-    </div>
+    </BackgroundLines>
   );
 };
 
